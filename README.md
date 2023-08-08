@@ -4,9 +4,9 @@
     <H1>PyOverlay</H1>
     <h6>Easily create overlay on top of any game/application<H6>
     <p> 
-        <a href="https://github.com/majvax/pyoverlay/issues">Report Bugs</a>
-        |
-        <a href="https://github.com/majvax/pyoverlay/issues">Request Features</a>
+        <a href="https://github.com/majvax/pyoverlay/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/majvax/pyoverlay?style=for-the-badge&labelColor=363a4f&color=b7bdf8"></a>
+        <a href="https://github.com/majvax/pyoverlay/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/majvax/pyoverlay?style=for-the-badge&labelColor=363a4f&color=f5a97f"></a>
+        <a href="https://github.com/majvax/pyoverlay/contributors"><img src="https://img.shields.io/github/contributors/majvax/pyoverlay?colorA=363a4f&colorB=a6da95&style=for-the-badge"></a>
     </p>
 </div>
 
