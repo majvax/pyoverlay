@@ -10,13 +10,19 @@ authors = [
 ]
 description = "Easily create overlay on top of any game/application"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: Microsoft :: Windows"
 ]
-
+dependencies = [
+  "rich",
+  "pywin32",
+  "pyOpenGL",
+  "PyGLM",
+  "glfw"
+]
 [project.urls]
 "Homepage" = "https://github.com/majvax/pyoverlay"
 "Bug Tracker" = "https://github.com/majvax/pyoverlay/issues"
