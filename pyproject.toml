@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyoverlay"
-version = "1.0"
+version = "1.0.1"
 authors = [
   { name="majvax", email="majvax.contact@gmail.com" },
 ]
