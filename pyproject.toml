@@ -8,7 +8,7 @@ version = "1.0"
 authors = [
   { name="majvax", email="majvax.contact@gmail.com" },
 ]
-description = "easily create overlay on top of any game/application"
+description = "Easily create overlay on top of any game/application"
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
@@ -18,5 +18,5 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/pypa/sampleproject"
-"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
+"Homepage" = "https://github.com/majvax/pyoverlay"
+"Bug Tracker" = "https://github.com/majvax/pyoverlay/issues"
