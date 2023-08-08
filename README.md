@@ -1,19 +1,20 @@
 
 <div align="center">
-    <img src="image/project.gif" style="border-radius: 50%; width: 150px; height: 150px" alt="logo">
-    <H1>PyOverlay</H1>
-    <h6>Easily create overlay on top of any game/application<H6>
+    <img src="image/project.gif" style="border-radius: 50%; width: 100px; height: 100px" alt="logo">
+    <H3>PyOverlay</H3>
     <p> 
         <a href="https://github.com/majvax/pyoverlay/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/majvax/pyoverlay?style=for-the-badge&labelColor=363a4f&color=b7bdf8"></a>
         <a href="https://github.com/majvax/pyoverlay/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/majvax/pyoverlay?style=for-the-badge&labelColor=363a4f&color=f5a97f"></a>
         <a href="https://github.com/majvax/pyoverlay/contributors"><img src="https://img.shields.io/github/contributors/majvax/pyoverlay?colorA=363a4f&colorB=a6da95&style=for-the-badge"></a>
-    </p>
+    </p>    
 </div>
+
 
 
 <details>
     <summary>Table of Contents</summary>
     <ol>
+        <li><a href="#description">Description</a></li>
         <li><a href="#preview">Preview</a></li>
         <li>
             <a href="#getting-started">Getting Started</a>
@@ -24,7 +25,16 @@
         <li>
     </ol>
 </details>
+
 <hr>
+
+<div align="center" id="preview">
+    <H3>Description 📸</H3>
+    <h6>Easily create and manage overlay for any game/appliction using pyopengl and glfw<H6>
+</div>
+
+<hr>
+
 
 <div align="center" id="preview">
     <H3>Preview 📸</H3>
@@ -40,6 +50,7 @@ pip install pyoverlay
 ```
 
 <H6>Install from source</H6>
+*note that the wheel file may not have this name*
 
 ```
 git clone https://github.com/majvax/pyoverlay.git
@@ -49,7 +60,11 @@ cd dist
 pip install pyoverlay.whl
 ```
 
-*note that the wheel file may not have this name*
+<H6>🚨 don't forget to install litGL🚨</H6>
+
+```
+pip install git+https://github.com/ncreati/litGL
+```
 
 </div>
 
