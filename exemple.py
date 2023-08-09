@@ -1,4 +1,5 @@
-from pyoverlay import Overlay, Point, Rect, RGBA, Color
+# from pyoverlay import Overlay, Point, Rect, RGBA, Color
+from src.pyoverlay import Overlay, Point, Rect, RGBA, Color
 import win32con
 
 
@@ -19,7 +20,8 @@ class OnTick:
             overlay.draw_empty_circle(overlay.target.rect.center, self.fov_radius, Color.WHITE)
             # draw an empty rect
             overlay.draw_empty_rect(overlay.target.rect, Color.WHITE)
-
+            # draw fps
+            overlay.draw_text(f"FPS: {overlay.fps}", Point(overlay.target.rect.center.x, overlay.target.rect.top + 20), Color.GREEN)
 
 
 if __name__ == "__main__":

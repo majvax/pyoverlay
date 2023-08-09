@@ -6,15 +6,16 @@ TODO:
     - [ ] Support for multiple monitors
     - [ ] Support for multiple targets
     - [ ] Compile using Cython/nuitka for better performance on low end systems
-    - [ ] Create own font rendering system
+    - [x] Create own font rendering system
+    - [ ] Add anchor system for text rendering
 
 FIXME:
     - [ ] Method overloading instead of `_ex` & `with_angle` functions
-    - [ ] Fix LitGL inverted y axis on label rendering
 """
 
 import math
 import OpenGL.GL as gl
+import OpenGL.GLUT as glut
 import glfw
 import glm
 from rich.traceback import install
@@ -23,8 +24,7 @@ import win32api
 import win32con
 import time
 from .helper import Point, Rect, RGBA, Color
-from litGL.label import Label
-from typing import Literal, overload
+from typing import Literal
 
 install()
 
@@ -98,15 +98,15 @@ class Overlay:
 
     def create(self) -> None:
         # init glfw
-        if not glfw.init():
-            self.error("glfw can not be initialized!")
+        if not glfw.init() or not glut.glutInit():
+            self.error("glfw/glut can not be initialized!")
         
         glfw.window_hint(glfw.FLOATING, glfw.TRUE)
         glfw.window_hint(glfw.TRANSPARENT_FRAMEBUFFER, glfw.TRUE)
         glfw.window_hint(glfw.DECORATED, glfw.FALSE)
         glfw.window_hint(glfw.FOCUS_ON_SHOW, glfw.FALSE)
         glfw.window_hint(glfw.RESIZABLE, glfw.FALSE)
-        glfw.window_hint(glfw.SAMPLES, 0)
+        glfw.window_hint(glfw.SAMPLES, 4)
 
         # create window
 
@@ -425,14 +425,21 @@ class Overlay:
         gl.glVertex2f(*position)
         gl.glEnd()
 
-    # other drawing functions
     @staticmethod
-    def draw_textbox(position: Point | tuple[int, int], anchor: Literal["ul", "uc", "ur", "cl", "cc", "cr", "ll", "lc", "lr"] = "lr", *args, **kargs) -> None:
-        if not 'size' in kargs:
-            kargs['size'] = 24
-        label = Label(pos=position, *args, dpi=get_monitor_dpi(), anchor=anchor, **kargs)
-        label.render(glm.ortho(0, 1920, 1079,  0, -1, 1))
-
+    def draw_text(text: str, bottom_left: Point, color: RGBA, font=glut.GLUT_BITMAP_9_BY_15) -> None:
+        """
+        Draws text on the screen.
+        TODO: 
+            Add anchor system (glutBitmapWidth(font, char) & glutBitmapHeight(font))
+            or using much simple calculation with GLUT_BITMAP_9_BY_15 or GLUT_BITMAP_8_BY_13
+        """
+        center_center = Point(bottom_left.x - int(9*len(text)/2), bottom_left.y)
+        gl.glColor4f(0.0, 1.0, 0.0, 1.0)
+        gl.glRasterPos2i(*center_center)
+        lines = text.split("\n")
+        for line in lines:
+            for c in line:
+                glut.glutBitmapCharacter(font, ord(c))
 
     def draw_test(self, rect: Rect) -> None:
         self.draw_empty_rect(rect, Color.WHITE)
@@ -440,8 +447,8 @@ class Overlay:
         self.draw_line(Point(rect.right, rect.top), Point(rect.left, rect.bottom), Color.WHITE)
         self.draw_empty_circle_ex(rect.center, 100, 5, Color.ORANGE)
         
-        self.draw_textbox(Point(rect.left, rect.top), text=f"{str(self.fps)} fps", anchor="ul")
-        self.draw_textbox(Point(rect.left, rect.top+30), text=f"{str(self.ms)} ms", anchor="ul")
+        self.draw_text(f"{str(self.fps)} fps", Point(rect.left, rect.top))
+        self.draw_text(f"{str(self.ms)} ms", Point(rect.left, rect.top+30))
 
     @staticmethod
     def get_input(key: int) -> bool:
