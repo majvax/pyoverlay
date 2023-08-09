@@ -22,7 +22,7 @@
                 <li><a href="#installation">Installation</a></li>
                 <li><a href="#usage">Usage</a></li>
             </ul>
-        <li>
+        </li>
     </ol>
 </details>
 
@@ -58,12 +58,6 @@ cd pyoverlay
 python -m build
 cd dist
 pip install pyoverlay.whl
-```
-
-<H6>🚨 don't forget to install litGL🚨</H6>
-
-```
-pip install git+https://github.com/ncreati/litGL
 ```
 
 </div>
