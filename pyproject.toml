@@ -17,7 +17,6 @@ classifiers = [
     "Operating System :: Microsoft :: Windows"
 ]
 dependencies = [
-  "rich",
   "pywin32",
   "PyOpenGL==3.1.6",
   "PyOpenGL-accelerate==3.1.6",
