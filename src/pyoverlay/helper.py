@@ -3,11 +3,19 @@ from typing import NamedTuple
 from itertools import cycle
 
 class Point(NamedTuple):
+    """
+    Represents a point in a 2D space.
+    https://learn.microsoft.com/en-us/windows/win32/api/windef/ns-windef-point
+    """
     x: int
     y: int
 
 @dataclass
 class Rect:
+    """
+    Represents a rectangle in a 2D space.
+    https://learn.microsoft.com/en-us/windows/win32/api/windef/ns-windef-rect
+    """
     left: int
     top: int
     right: int
@@ -26,12 +34,14 @@ class Rect:
         return Point(self.left+int(self.width / 2), int(self.top+self.height / 2))
 
 class RGBA(NamedTuple):
+    """Represents a color in RGBA format."""
     r: int
     g: int
     b: int
     a: float
 
 class Color:
+    """Contains a list of various colors."""
     RED = RGBA(255, 0, 0, 1.0)
     GREEN = RGBA(0, 255, 0, 1.0)
     BLUE = RGBA(0, 0, 255, 1.0)

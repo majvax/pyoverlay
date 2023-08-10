@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyoverlay"
-version = "1.0.2"
+version = "1.0.3"
 authors = [
   { name="majvax", email="majvax.contact@gmail.com" },
 ]
@@ -19,8 +19,8 @@ classifiers = [
 dependencies = [
   "rich",
   "pywin32",
-  "pyOpenGL",
-  "PyGLM",
+  "PyOpenGL==3.1.6",
+  "PyOpenGL-accelerate==3.1.6",
   "glfw"
 ]
 [project.urls]

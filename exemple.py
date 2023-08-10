@@ -1,9 +1,9 @@
-# from pyoverlay import Overlay, Point, Rect, RGBA, Color
-from src.pyoverlay import Overlay, Point, Rect, RGBA, Color
+from pyoverlay import Overlay, Point, Rect, RGBA, Color
 import win32con
 
 
 class OnTick:
+    """This class is called every frame."""
     def __init__(self) -> None:
         self.fov_radius = 150
     

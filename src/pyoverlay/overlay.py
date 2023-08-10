@@ -17,18 +17,17 @@ import math
 import OpenGL.GL as gl
 import OpenGL.GLUT as glut
 import glfw
-import glm
-from rich.traceback import install
 import win32gui
 import win32api
 import win32con
 import time
 from .helper import Point, Rect, RGBA, Color
-from typing import Literal
-
-install()
 
 class Target:
+    """
+    Represents a windows
+    should not be used directly
+    """
     def __init__(self, title: str) -> None:
         self._title = title
         self._hwnd = win32gui.FindWindow(None, title)
@@ -67,37 +66,21 @@ class Target:
         self._is_valid = win32gui.GetForegroundWindow() == self._hwnd
 
 
-
-
-def get_monitor_dpi():
-    """ Return monitor resolution in dot per inch.
-        Returns:
-            float: monitor dot per inch
-    """
-    monitor = glfw.get_primary_monitor()[0]
-    # Size in mm
-    video_physical_size = glm.vec2(glfw.get_monitor_physical_size(monitor))
-    #Monitor info
-    video_resolution = glm.vec2(glfw.get_video_mode(monitor).size)
-    # Calculate screen DPI
-    inch_to_mm = 0.393701/10.0
-    dpi = (video_resolution/(video_physical_size*inch_to_mm))
-    return sum(dpi) / 2.0
-
-
 class Overlay:
+    """
+    Represents the overlay
+    """
     def __init__(self, target: str) -> None:
         self._target = Target(target)
         self._on_tick = None
         self._loop_time = time.time()
+        self._current_loop_time = time.time()
         self._frames = 0
         self.fps = 0
         self.ms = 0
         self._window = None
 
-
     def create(self) -> None:
-        # init glfw
         if not glfw.init() or not glut.glutInit():
             self.error("glfw/glut can not be initialized!")
         
@@ -107,8 +90,6 @@ class Overlay:
         glfw.window_hint(glfw.FOCUS_ON_SHOW, glfw.FALSE)
         glfw.window_hint(glfw.RESIZABLE, glfw.FALSE)
         glfw.window_hint(glfw.SAMPLES, 4)
-
-        # create window
 
         self._window = glfw.create_window(1920, 1079, "", None, None)
         if not self._window:
@@ -130,21 +111,12 @@ class Overlay:
         gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
         # gl.glEnable(gl.GL_LINE_SMOOTH)
 
-
-        # make window transparent
+        # make window toolwindow and transparent
         win32gui.SetWindowLong(self.hwnd, win32con.GWL_EXSTYLE, win32gui.GetWindowLong(self.hwnd, win32con.GWL_EXSTYLE) | win32con.WS_EX_LAYERED | win32con.WS_EX_TRANSPARENT)
-
-        # hide from taskbar 
         win32gui.SetWindowLong(self.hwnd, win32con.GWL_EXSTYLE, win32gui.GetWindowLong(self.hwnd, win32con.GWL_EXSTYLE) & ~win32con.WS_EX_APPWINDOW | win32con.WS_EX_TOOLWINDOW)
-
-        glfw.set_window_aspect_ratio(self._window, 4, 3)
 
     def stop(self) -> None:
         glfw.set_window_should_close(self._window, True)
-
-    def destroy(self) -> None:
-        glfw.destroy_window(self._window)
-        glfw.terminate()
 
     def run(self) -> None:
         if not self._on_tick:
@@ -183,8 +155,11 @@ class Overlay:
             gl.glClear(gl.GL_COLOR_BUFFER_BIT)
             gl.glClearColor(0, 0, 0, 0)
             
+        self._destroy()
 
-        self.destroy()
+    def destroy(self) -> None:
+        glfw.destroy_window(self._window)
+        glfw.terminate()
 
     def error(self, error) -> None:
         if not self._on_error:
@@ -192,9 +167,9 @@ class Overlay:
         
         self._on_error(self, error)
 
-    def _on_error(self, error) -> None:
+    @staticmethod
+    def _on_error(error) -> None:
         raise Exception(error)
-
 
     @property
     def hwnd(self) -> int:
@@ -222,8 +197,6 @@ class Overlay:
     @property
     def target(self) -> Target:
         return self._target
-
-    #  line drawing functions
 
     @staticmethod
     def draw_line(start: Point | tuple[int, int], end: Point | tuple[int, int], color: RGBA | tuple[int, int, int, float]) -> None:
@@ -260,9 +233,6 @@ class Overlay:
         gl.glVertex2f(*start)
         gl.glVertex2f(start.x + math.sin(angle) * length, start.y + math.cos(angle) * length)
         gl.glEnd()
-
-
-    # rect drawing functions
 
     @staticmethod
     def draw_filled_rect(rect: Rect, color: RGBA | tuple[int, int, int, float]) -> None:
@@ -343,9 +313,6 @@ class Overlay:
         gl.glEnd()
         gl.glPopMatrix()
 
-
-    # circle drawing functions
-
     @staticmethod
     def draw_filled_circle(position: Point | tuple[int, int], radius: int, color: RGBA | tuple[int, int, int, float]) -> None:
         gl.glBegin(gl.GL_TRIANGLE_FAN)
@@ -394,10 +361,10 @@ class Overlay:
         gl.glEnd()
 
     @staticmethod
-    def draw_empty_circle_ex(position: Point | tuple[int, int], radius: int, width: int, color: RGBA | tuple[int, int, int, float]) -> None:
+    def draw_empty_circle_ex(position: Point | tuple[int, int], npoint: int, radius: int, width: int, color: RGBA | tuple[int, int, int, float]) -> None:
         # draw empty circle
         gl.glColor4f(*color)
-        theta = math.pi * 2 / float(500)
+        theta = math.pi * 2 / float(npoint)
         tangetial_factor = math.tan(theta)
         radial_factor = math.cos(theta)
         x = radius
@@ -405,7 +372,7 @@ class Overlay:
         gl.glLineWidth(width)
         gl.glBegin(gl.GL_LINE_LOOP)
         
-        for i in range(500):
+        for i in range(npoint):
             gl.glVertex2f(x + position[0], y + position[1])
             tx = -y
             ty = x
@@ -434,12 +401,28 @@ class Overlay:
             or using much simple calculation with GLUT_BITMAP_9_BY_15 or GLUT_BITMAP_8_BY_13
         """
         center_center = Point(bottom_left.x - int(9*len(text)/2), bottom_left.y)
-        gl.glColor4f(0.0, 1.0, 0.0, 1.0)
+        gl.glColor4f(*color)
         gl.glRasterPos2i(*center_center)
         lines = text.split("\n")
         for line in lines:
             for c in line:
                 glut.glutBitmapCharacter(font, ord(c))
+
+    @staticmethod
+    def get_input(key: int) -> bool:
+        """
+        Returns True if the key is pressed, False otherwise. 
+        Note that should not be used every frame, because it will not return True every frame if the key is pressed.
+        """
+        return win32api.GetAsyncKeyState(key) & 1
+
+    @staticmethod
+    def get_input_ex(key: str) -> bool:
+        """
+        Returns True if the key is pressed, False otherwise.
+        Note that this function should be used every frame
+        """
+        return win32api.GetAsyncKeyState(key)
 
     def draw_test(self, rect: Rect) -> None:
         self.draw_empty_rect(rect, Color.WHITE)
@@ -449,11 +432,3 @@ class Overlay:
         
         self.draw_text(f"{str(self.fps)} fps", Point(rect.left, rect.top))
         self.draw_text(f"{str(self.ms)} ms", Point(rect.left, rect.top+30))
-
-    @staticmethod
-    def get_input(key: int) -> bool:
-        """
-        Returns True if the key is pressed, False otherwise.
-        """
-        return win32api.GetAsyncKeyState(key) & 1
-
