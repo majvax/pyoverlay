@@ -24,11 +24,11 @@ class Rect:
     @property
     def width(self) -> int:
         return self.right - self.left
-    
+
     @property
     def height(self) -> int:
         return self.bottom - self.top
-    
+
     @property
     def center(self) -> Point:
         return Point(self.left+int(self.width / 2), int(self.top+self.height / 2))

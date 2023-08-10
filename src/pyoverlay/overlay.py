@@ -41,7 +41,7 @@ class Target:
     @property
     def hwnd(self) -> int:
         return self._hwnd
-    
+
     @property
     def rect(self) -> Rect:
         return self._rect
@@ -83,7 +83,7 @@ class Overlay:
     def create(self) -> None:
         if not glfw.init() or not glut.glutInit():
             self.error("glfw/glut can not be initialized!")
-        
+
         glfw.window_hint(glfw.FLOATING, glfw.TRUE)
         glfw.window_hint(glfw.TRANSPARENT_FRAMEBUFFER, glfw.TRUE)
         glfw.window_hint(glfw.DECORATED, glfw.FALSE)
@@ -94,7 +94,7 @@ class Overlay:
         self._window = glfw.create_window(1920, 1079, "", None, None)
         if not self._window:
             self.error("glfw window can not be created!")
-        
+
         glfw.make_context_current(self._window)
         glfw.set_input_mode(self._window, glfw.CURSOR, glfw.CURSOR_DISABLED)
         glfw.swap_interval(0) # disable vsync
@@ -121,7 +121,7 @@ class Overlay:
     def run(self) -> None:
         if not self._on_tick:
             self.error("No render callback set!")
-        
+
         while not self.target.exists:
             self.target.update()
             time.sleep(1)
@@ -154,7 +154,7 @@ class Overlay:
             glfw.swap_buffers(self._window)
             gl.glClear(gl.GL_COLOR_BUFFER_BIT)
             gl.glClearColor(0, 0, 0, 0)
-            
+
         self._destroy()
 
     def destroy(self) -> None:
@@ -164,7 +164,7 @@ class Overlay:
     def error(self, error) -> None:
         if not self._on_error:
             self._on_error(self, error)
-        
+
         self._on_error(self, error)
 
     @staticmethod
@@ -181,7 +181,7 @@ class Overlay:
     @property
     def on_tick(self) -> callable:
         return self._on_tick
-    
+
     @on_tick.setter
     def on_tick(self, callback: callable) -> None:
         self._on_tick = callback
@@ -189,7 +189,7 @@ class Overlay:
     @property
     def on_error(self) -> callable:
         return self._on_error
-    
+
     @on_error.setter
     def on_error(self, callback: callable) -> None:
         self._on_error = callback
@@ -206,7 +206,7 @@ class Overlay:
         gl.glVertex2f(*start)
         gl.glVertex2f(*end)
         gl.glEnd()
-    
+
     @staticmethod
     def draw_line_ex(start: Point | tuple[int, int], end: Point | tuple[int, int], width: int, color: RGBA | tuple[int, int, int, float]) -> None:
         gl.glLineWidth(width)
@@ -347,8 +347,8 @@ class Overlay:
         y = 0
         gl.glLineWidth(1)
         gl.glBegin(gl.GL_LINE_LOOP)
-        
-        for i in range(500):
+
+        for _ in range(500):
             gl.glVertex2f(x + position[0], y + position[1])
             tx = -y
             ty = x
@@ -371,8 +371,8 @@ class Overlay:
         y = 0
         gl.glLineWidth(width)
         gl.glBegin(gl.GL_LINE_LOOP)
-        
-        for i in range(npoint):
+
+        for _ in range(npoint):
             gl.glVertex2f(x + position[0], y + position[1])
             tx = -y
             ty = x
@@ -429,6 +429,5 @@ class Overlay:
         self.draw_line(Point(rect.left, rect.top), Point(rect.right, rect.bottom), Color.WHITE)
         self.draw_line(Point(rect.right, rect.top), Point(rect.left, rect.bottom), Color.WHITE)
         self.draw_empty_circle_ex(rect.center, 100, 5, Color.ORANGE)
-        
         self.draw_text(f"{str(self.fps)} fps", Point(rect.left, rect.top))
         self.draw_text(f"{str(self.ms)} ms", Point(rect.left, rect.top+30))

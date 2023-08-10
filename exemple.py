@@ -6,7 +6,7 @@ class OnTick:
     """This class is called every frame."""
     def __init__(self) -> None:
         self.fov_radius = 150
-    
+
     def __call__(self, overlay: Overlay) -> None:
         if overlay.get_input(win32con.VK_ESCAPE):
             overlay.stop()
