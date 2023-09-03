@@ -339,8 +339,9 @@ class Overlay:
     @staticmethod
     def draw_empty_circle(position: Point | tuple[int, int], radius: int, color: RGBA | tuple[int, int, int, float]) -> None:
         # draw empty circle
+        precision = 500
         gl.glColor4f(*color)
-        theta = math.pi * 2 / float(500)
+        theta = math.pi * 2 / float(precision)
         tangetial_factor = math.tan(theta)
         radial_factor = math.cos(theta)
         x = radius
@@ -348,7 +349,7 @@ class Overlay:
         gl.glLineWidth(1)
         gl.glBegin(gl.GL_LINE_LOOP)
 
-        for _ in range(500):
+        for _ in range(precision):
             gl.glVertex2f(x + position[0], y + position[1])
             tx = -y
             ty = x
@@ -358,6 +359,23 @@ class Overlay:
 
             x *= radial_factor
             y *= radial_factor
+        gl.glEnd()
+
+    @staticmethod
+    def draw_empty_ellipsis(position: Point | tuple[int, int], x_radius, y_radius, color: RGBA | tuple[int, int, int, float]) -> None:
+        precision = 500
+        theta = math.pi * 2 / float(precision)
+        sine = math.sin(theta)
+        cosine = math.cos(theta)
+        x = 1
+        y = 0
+        gl.glLineWidth(1)
+        gl.glBegin(gl.GL_LINE_LOOP)
+        for _ in range(precision):
+            gl.glVertex2f(x * x_radius + position[0], y * y_radius + position[1])
+            t = x
+            x = sine * x - cosine * y
+            y = sine * t + cosine * y        
         gl.glEnd()
 
     @staticmethod
