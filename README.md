@@ -51,7 +51,8 @@ pip install pyoverlay
 ```
 
 <H6>Install from source</H6>
-*note that the wheel file may not have this name*
+> [!NOTE]
+> note that the wheel file may not have this name
 
 ```
 git clone https://github.com/majvax/pyoverlay.git
